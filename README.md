@@ -1,6 +1,6 @@
 # YAMAL 304 — The Lamine Yamal Quiz
 
-A normal, phone-friendly trivia game about **Lamine Yamal**. Ten questions per game, 20 seconds per question, explanations after every answer, best score saved on the device, and a built-in QR code to share the live quiz.
+A normal, phone-friendly trivia game about **Lamine Yamal**. Ten questions per game, 60 seconds per question, explanations after every answer, best score saved on the device, and a built-in QR code to share the live quiz.
 
 **Live quiz:** once deployed, the in-game **SHARE / QR** button generates a QR for the current URL. No build step.
 
@@ -8,7 +8,7 @@ A normal, phone-friendly trivia game about **Lamine Yamal**. Ten questions per g
 
 - 10 questions per game: 4 easy + 4 medium + 2 tough, drawn from a 32-question bank.
 - Answer with a tap/click, or keys `1` / `2` / `3` / `4` (also `A`–`D`).
-- 20-second timer per question. `Enter` advances after an answer.
+- 60-second timer per question. `Enter` advances after an answer.
 - One point per correct answer. Personal best is stored in `localStorage`.
 - Results screen with rank, accuracy, best streak, and a full answer review.
 - Facts checked **November 2026**.

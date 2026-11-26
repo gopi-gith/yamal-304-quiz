@@ -15,7 +15,7 @@
 
   /* ---------------- state ---------------- */
   const QUIZ_SIZE = 10;
-  const TIME_PER_QUESTION = 20;
+  const TIME_PER_QUESTION = 60;
   const BEST_KEY = 'yamal304-best-v2';
   const SOUND_KEY = 'yamal304-sound';
 

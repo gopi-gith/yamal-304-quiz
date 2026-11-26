@@ -1,7 +1,7 @@
 {
   "name": "YAMAL 304 — The Lamine Yamal Quiz",
   "short_name": "YAMAL 304",
-  "description": "10 questions about Lamine Yamal. 20 seconds each. How well do you know the kid from Rocafonda?",
+  "description": "10 questions about Lamine Yamal. 60 seconds each. How well do you know the kid from Rocafonda?",
   "start_url": ".",
   "scope": ".",
   "display": "standalone",
