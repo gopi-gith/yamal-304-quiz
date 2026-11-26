@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f4efe2">
+<title>YAMAL 304 — Quiz Answer Key</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<style>
+  :root{
+    --paper:#f5f0e4;
+    --ink:#11131a;
+    --muted:#5d6170;
+    --gold:#9a6a00;
+    --blue:#1b2a6b;
+    --red:#a5123c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#d9d2c2;color:var(--ink);font-family:"Space Grotesk","Helvetica Neue",Arial,sans-serif;line-height:1.45}
+  .toolbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:12px 20px;background:#11131a;color:#f5f0e4;font-size:11px;letter-spacing:.12em}
+  .toolbar a{color:#ffcf4a;text-decoration:none;font-weight:700}
+  .toolbar a.pdf{border:1px solid rgba(255,255,255,.25);padding:8px 10px;border-radius:3px;font-size:10px}
+  .toolbar .actions{display:flex;gap:8px;align-items:center}
+  .toolbar button{border:1px solid rgba(255,255,255,.25);background:#ffcf4a;color:#11131a;font:700 11px "Space Grotesk",Arial,sans-serif;
+    letter-spacing:.1em;padding:8px 12px;border-radius:3px;cursor:pointer}
+  .sheet{max-width:820px;margin:24px auto 50px;background:var(--paper);padding:34px 38px 40px;
+    box-shadow:0 20px 60px rgba(0,0,0,.2);border-top:6px solid var(--red)}
+  .head{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;padding-bottom:18px;border-bottom:2px solid var(--ink)}
+  .brand{font-family:"Bricolage Grotesque","Arial Black",Arial,sans-serif;font-weight:800;letter-spacing:-.03em;line-height:.85}
+  .brand b{display:block;font-size:42px}
+  .brand span{display:block;font-size:17px;letter-spacing:.15em;color:var(--red);font-family:"Space Grotesk",Arial,sans-serif;font-weight:700;margin-top:8px}
+  .kicker{font-size:9px;font-weight:700;letter-spacing:.3em;color:var(--muted);margin-bottom:8px}
+  .qr{width:118px;flex:none;text-align:center}
+  .qr-box{background:#fff;border:1px solid #c9c1b0;padding:6px;width:118px;height:118px;display:flex;align-items:center;justify-content:center}
+  .qr-box svg{width:100%;height:auto;display:block}
+  .qr small{display:block;font-size:6px;letter-spacing:.14em;font-weight:700;color:var(--muted);margin-top:5px;line-height:1.5;word-break:break-all}
+  .meta{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:8px;font-weight:700;letter-spacing:.13em;color:var(--muted);
+    margin:14px 0 4px}
+  .meta b{color:var(--ink)}
+  .note{font-size:9px;color:var(--muted);margin:8px 0 18px;line-height:1.6}
+  h2{font-family:"Bricolage Grotesque","Arial Black",Arial,sans-serif;font-size:16px;letter-spacing:.1em;
+    margin:20px 0 8px;padding-top:8px;border-top:1px solid #c9c1b0;color:var(--red)}
+  h2:first-of-type{border-top:0;padding-top:0}
+  .q{padding:8px 0 9px;border-bottom:1px solid #ddd5c5;break-inside:avoid;page-break-inside:avoid}
+  .q:last-child{border-bottom:0}
+  .q-head{font-size:10px;font-weight:700;line-height:1.45}
+  .q-head .n{color:var(--muted);margin-right:5px}
+  .q-head .cat{font-weight:700;font-size:7px;letter-spacing:.13em;color:var(--red);margin-right:6px}
+  .ans{font-size:9px;font-weight:700;margin-top:3px}
+  .ans span{color:var(--gold)}
+  .why{font-size:8px;color:var(--muted);margin-top:2px}
+  .foot{margin-top:22px;padding-top:10px;border-top:1px solid #c9c1b0;display:flex;justify-content:space-between;gap:12px;
+    font-size:7px;letter-spacing:.12em;color:var(--muted)}
+  @media print{
+    @page{size:A4;margin:13mm}
+    body{background:#fff}
+    .toolbar{display:none}
+    .sheet{max-width:none;margin:0;padding:0;box-shadow:none;border-top:0;background:#fff}
+    .head{border-bottom:2px solid #000}
+    .brand b{font-size:38px}
+    .qr-box{border:1px solid #000}
+    .q{padding:6px 0 7px;border-bottom:1px solid #ccc}
+    .note{color:#444}
+    .why{color:#444}
+    h2{margin-top:14px}
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <a href="./">← BACK TO THE QUIZ</a>
+  <div class="actions">
+    <span>PRINTABLE ANSWER KEY</span>
+    <a class="pdf" href="YAMAL-304-Answer-Key.pdf" download>DOWNLOAD PDF</a>
+    <button onclick="window.print()">PRINT / SAVE PDF</button>
+  </div>
+</div>
+
+<div class="sheet">
+  <div class="head">
+    <div>
+      <div class="kicker">QUIZ MASTER SHEET · FACTS CHECKED NOV 2026</div>
+      <div class="brand"><b>YAMAL 304</b><span>THE LAMINE YAMAL QUIZ · ANSWER KEY</span></div>
+    </div>
+    <div class="qr">
+      <div class="qr-box" id="qrBox"></div>
+      <small id="qrUrl">SCAN TO PLAY</small>
+    </div>
+  </div>
+
+  <div class="meta">
+    <span><b id="total">32</b> QUESTIONS IN THE BANK</span>
+    <span>GAME DRAWS <b>10</b></span>
+    <span>4 EASY · 4 MEDIUM · 2 TOUGH</span>
+    <span>20 SECONDS EACH</span>
+  </div>
+  <p class="note">This is the full question bank. The live game randomly draws 10 questions each round. Correct answers are in bold; explanations are included so you can host the quiz without extra research.</p>
+
+  <div id="list"></div>
+
+  <div class="foot">
+    <span>YAMAL 304 · THE LAMINE YAMAL QUIZ</span>
+    <span>FAN-MADE · NOT AFFILIATED</span>
+  </div>
+</div>
+
+<script src="qrcode.min.js"></script>
+<script src="questions.js"></script>
+<script>
+(() => {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const Q = Array.isArray(window.YAMAL_QUESTIONS) ? window.YAMAL_QUESTIONS : [];
+  const groups = [
+    { level: 1, title: 'EASY' },
+    { level: 2, title: 'MEDIUM' },
+    { level: 3, title: 'TOUGH' }
+  ];
+  const list = $('list');
+  let n = 0;
+  groups.forEach((g) => {
+    const items = Q.filter((q) => q.level === g.level);
+    if (!items.length) return;
+    const h = document.createElement('h2');
+    h.textContent = `${g.title} · ${items.length} QUESTIONS`;
+    list.appendChild(h);
+    items.forEach((q) => {
+      n++;
+      const correct = q.options[q.answer];
+      const d = document.createElement('div');
+      d.className = 'q';
+      d.innerHTML = `<div class="q-head"><span class="n">${String(n).padStart(2, '0')}</span><span class="cat">${esc(q.cat)}</span>${esc(q.q)}</div>
+        <div class="ans">ANSWER: <span>${esc(correct)}</span></div>
+        <div class="why">${esc(q.explain)}</div>`;
+      list.appendChild(d);
+    });
+  });
+  $('total').textContent = String(Q.length);
+
+  // QR code to the quiz (works once the folder is hosted).
+  const quizUrl = location.origin + location.pathname.replace(/answers\.html$/, '');
+  $('qrUrl').textContent = quizUrl;
+  if (typeof qrcode === 'function') {
+    try {
+      const qr = qrcode(0, 'M');
+      qr.addData(quizUrl);
+      qr.make();
+      $('qrBox').innerHTML = qr.createSvgTag({ cellSize: 5, margin: 2, scalable: true });
+    } catch (e) {
+      $('qrBox').innerHTML = '<span style="font-size:7px">QR unavailable</span>';
+    }
+  } else {
+    $('qrBox').innerHTML = '<span style="font-size:7px">QR unavailable</span>';
+  }
+})();
+</script>
+</body>
+</html>

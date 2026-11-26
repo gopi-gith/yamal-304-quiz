@@ -1,0 +1,19 @@
+{
+  "name": "YAMAL 304 — The Lamine Yamal Quiz",
+  "short_name": "YAMAL 304",
+  "description": "10 questions about Lamine Yamal. 20 seconds each. How well do you know the kid from Rocafonda?",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#060812",
+  "theme_color": "#060812",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

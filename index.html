@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#060812">
+<meta name="description" content="The Lamine Yamal 304 Quiz — 10 questions about the kid from Rocafonda. How well do you know him?">
+<meta property="og:title" content="YAMAL 304 — The Lamine Yamal Quiz">
+<meta property="og:description" content="10 questions. 20 seconds each. How well do you know the kid from Rocafonda?">
+<meta property="og:type" content="website">
+<title>YAMAL 304 — The Lamine Yamal Quiz</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#060812;
+    --deep:#0b1024;
+    --blau:#223e9c;
+    --grana:#b3153f;
+    --gold:#ffcf4a;
+    --bone:#f4efe2;
+    --muted:#969aae;
+    --green:#43d17a;
+    --red:#ff5c72;
+    --display:'Bricolage Grotesque','Arial Black',sans-serif;
+    --num:'Anton','Arial Black',sans-serif;
+    --ui:'Space Grotesk','Helvetica Neue',sans-serif;
+    --safe-t:env(safe-area-inset-top,0px);
+    --safe-b:env(safe-area-inset-bottom,0px);
+    --safe-l:env(safe-area-inset-left,0px);
+    --safe-r:env(safe-area-inset-right,0px);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden;background:var(--ink);color:var(--bone);font-family:var(--ui);-webkit-font-smoothing:antialiased}
+  body{touch-action:manipulation;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+  button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-action:manipulation}
+  button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  .hidden{display:none !important}
+  #app{position:relative;height:100%;overflow:hidden;isolation:isolate}
+
+  /* ---------------- atmosphere ---------------- */
+  .bg-glow{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(ellipse at 12% 0%, rgba(255,207,74,.16), transparent 42%),
+      radial-gradient(ellipse at 90% 10%, rgba(179,21,63,.18), transparent 45%),
+      radial-gradient(ellipse at 50% 120%, rgba(34,62,156,.25), transparent 55%),
+      linear-gradient(180deg,#060812,#080d1d 60%,#050711)}
+  .bg-pitch{position:fixed;left:-18%;right:-18%;bottom:-20%;height:56%;z-index:0;pointer-events:none;
+    background:
+      repeating-linear-gradient(90deg, rgba(30,124,70,.32) 0 60px, rgba(20,91,51,.32) 60px 120px);
+    transform:perspective(620px) rotateX(58deg);transform-origin:50% 100%;
+    border-top:1px solid rgba(244,239,226,.13);opacity:.6;
+    -webkit-mask-image:linear-gradient(180deg,transparent,#000 35%,#000 80%,transparent)}
+  .bg-pitch::before{content:'';position:absolute;left:50%;top:18%;width:24%;aspect-ratio:1;transform:translateX(-50%);
+    border:2px solid rgba(244,239,226,.18);border-radius:50%}
+  .bg-pitch::after{content:'';position:absolute;left:50%;top:18%;bottom:0;width:2px;background:rgba(244,239,226,.12);transform:translateX(-50%)}
+  .bg-ghost{position:fixed;right:-3vw;top:6vh;z-index:0;font-family:var(--display);font-weight:800;
+    font-size:clamp(280px,36vw,620px);line-height:1;letter-spacing:-.1em;color:transparent;
+    -webkit-text-stroke:1.5px rgba(255,207,74,.1);pointer-events:none;user-select:none}
+  .bg-stripe{position:fixed;left:0;top:0;bottom:0;width:6px;z-index:3;pointer-events:none;
+    background:repeating-linear-gradient(180deg,var(--blau) 0 44px,var(--grana) 44px 88px);opacity:.95}
+  #grain{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.045;mix-blend-mode:overlay;background-size:160px 160px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E")}
+
+  /* ---------------- shared ---------------- */
+  .screen{position:fixed;inset:0;z-index:10;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;
+    padding:calc(24px + var(--safe-t)) calc(24px + var(--safe-r)) calc(24px + var(--safe-b)) calc(26px + var(--safe-l))}
+  .screen.hidden{display:none !important}
+  .eyebrow{display:flex;align-items:center;gap:9px;font-size:9px;font-weight:700;letter-spacing:.32em;color:var(--gold);margin-bottom:16px}
+  .pip{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold)}
+  .btn-gold{display:inline-flex;align-items:center;justify-content:center;gap:14px;background:var(--gold);color:var(--ink);
+    font-family:var(--num);font-size:clamp(17px,1.8vw,23px);letter-spacing:.035em;padding:14px 26px;
+    clip-path:polygon(0 0,100% 0,96% 100%,0 100%);box-shadow:0 12px 44px rgba(255,207,74,.22);transition:.2s}
+  .btn-gold:hover{transform:translateX(5px);filter:brightness(1.06)}
+  .btn-gold:active{transform:translateX(2px) scale(.99)}
+  .btn-gold span{font-family:var(--ui);font-weight:400;font-size:1.2em}
+  a.btn-ghost{display:inline-flex;align-items:center;text-decoration:none}
+  .btn-ghost{padding:12px 15px;border:1px solid rgba(244,239,226,.2);border-radius:4px;color:var(--muted);
+    font-size:8px;font-weight:700;letter-spacing:.15em;background:rgba(255,255,255,.025);transition:.18s}
+  .btn-ghost:hover{color:var(--bone);border-color:rgba(244,239,226,.45)}
+  .icon-btn{width:34px;height:34px;border-radius:50%;border:1px solid rgba(244,239,226,.17);background:rgba(6,9,18,.55);
+    display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;transition:.15s;backdrop-filter:blur(8px)}
+  .icon-btn:hover{color:var(--gold);border-color:rgba(255,207,74,.5)}
+  .tiny-kicker{font-size:7px;font-weight:700;letter-spacing:.22em;color:var(--muted)}
+
+  /* ---------------- start ---------------- */
+  #start{display:flex;align-items:center;justify-content:center}
+  .start-wrap{width:min(1180px,100%);display:grid;grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);
+    align-items:center;gap:clamp(24px,5vw,80px);min-height:calc(100dvh - 48px);margin:0 auto}
+  .start-copy{max-width:680px}
+  .start-title{position:relative;width:max-content;max-width:100%;line-height:.78}
+  .start-title .first{display:block;font-family:var(--display);font-weight:600;font-size:clamp(14px,1.4vw,20px);
+    letter-spacing:.42em;color:rgba(244,239,226,.62);margin-bottom:12px}
+  .start-title .last{display:block;font-family:var(--display);font-weight:800;font-size:clamp(82px,12.5vw,172px);
+    letter-spacing:-.07em;color:var(--bone);text-shadow:0 8px 0 rgba(179,21,63,.35),0 30px 90px rgba(0,0,0,.65)}
+  .start-title .quizline{display:block;font-family:var(--num);font-size:clamp(24px,3.1vw,44px);letter-spacing:.02em;
+    color:var(--gold);margin-top:6px}
+  .start-title .sticker{position:absolute;right:-24px;bottom:12px;font-family:var(--num);font-size:clamp(24px,3vw,40px);
+    background:var(--bone);color:var(--ink);padding:.15em .25em .11em;border-radius:5px;transform:rotate(-8deg);
+    box-shadow:6px 7px 0 rgba(0,0,0,.3)}
+  .tagline{font-family:var(--display);font-size:clamp(16px,1.8vw,22px);line-height:1.45;color:rgba(244,239,226,.7);
+    max-width:36ch;margin:24px 0 22px}
+  .tagline b{color:var(--gold);font-weight:600}
+  .rules{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+  .rule{border:1px solid rgba(244,239,226,.14);background:rgba(255,255,255,.035);border-radius:999px;
+    padding:7px 11px;font-size:7px;font-weight:700;letter-spacing:.14em;color:rgba(244,239,226,.65)}
+  .rule b{color:var(--gold)}
+  .start-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .start-meta{display:flex;gap:18px;align-items:center;margin-top:22px;font-size:7px;font-weight:700;letter-spacing:.16em;color:var(--muted);flex-wrap:wrap}
+  .start-meta b{color:var(--gold);font-family:var(--num);font-size:13px;letter-spacing:.04em}
+  .start-footer{position:fixed;left:calc(26px + var(--safe-l));right:calc(24px + var(--safe-r));bottom:calc(15px + var(--safe-b));
+    display:flex;justify-content:space-between;gap:12px;font-size:6.5px;letter-spacing:.16em;color:rgba(244,239,226,.26);z-index:4;pointer-events:none}
+  .start-utils{position:fixed;top:calc(18px + var(--safe-t));right:calc(20px + var(--safe-r));z-index:5;display:flex;gap:7px}
+  .utils-btn{font-size:7px;font-weight:700;letter-spacing:.13em;color:var(--muted);border:1px solid rgba(244,239,226,.15);
+    background:rgba(6,9,18,.5);border-radius:999px;padding:8px 10px;transition:.15s;backdrop-filter:blur(8px)}
+  .utils-btn:hover{color:var(--gold);border-color:rgba(255,207,74,.5)}
+
+  /* player jersey card */
+  .jersey-side{display:flex;flex-direction:column;align-items:center;gap:16px;transform:rotate(1.5deg)}
+  .jersey-card{position:relative;width:min(280px,100%);padding:20px;border-radius:20px;
+    background:linear-gradient(160deg,rgba(34,62,156,.48),rgba(6,9,18,.9) 55%,rgba(6,9,18,.96));
+    border:1px solid rgba(255,207,74,.22);box-shadow:0 30px 90px rgba(0,0,0,.5)}
+  .jersey-card::before{content:'';position:absolute;inset:0;border-radius:20px;pointer-events:none;
+    background:radial-gradient(circle at 50% 0%,rgba(255,207,74,.16),transparent 55%)}
+  .jersey{position:relative;height:280px;filter:drop-shadow(0 18px 28px rgba(0,0,0,.45));
+    background:repeating-linear-gradient(90deg,var(--blau) 0 26px,var(--grana) 26px 52px);
+    clip-path:polygon(22% 0,38% 7%,62% 7%,78% 0,100% 16%,88% 34%,82% 30%,82% 100%,18% 100%,18% 30%,12% 34%,0 16%)}
+  .jersey::before{content:'';position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(255,255,255,.16),transparent 30%,rgba(0,0,0,.25));pointer-events:none}
+  .jersey::after{content:'';position:absolute;left:50%;top:0;width:58px;height:16px;transform:translateX(-50%);
+    border-radius:0 0 30px 30px;background:var(--gold);opacity:.9}
+  .jnum{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);font-family:var(--num);font-size:104px;line-height:1;color:var(--gold);text-shadow:0 4px 0 rgba(0,0,0,.25)}
+  .jname{position:absolute;left:50%;top:61%;transform:translateX(-50%);font-family:var(--display);font-weight:800;
+    font-size:19px;letter-spacing:.18em;color:var(--bone);text-shadow:0 2px 8px rgba(0,0,0,.6)}
+  .jflag{position:absolute;right:18%;top:24%;font-size:7px;font-weight:700;letter-spacing:.1em;color:var(--gold);opacity:.8}
+  .jersey-tag{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;
+    border-top:1px solid rgba(244,239,226,.12);font-size:6px;font-weight:700;letter-spacing:.16em;color:var(--muted)}
+  .jersey-tag b{color:var(--gold)}
+  .jersey-304{font-family:var(--num);font-size:24px;color:var(--gold);line-height:1}
+  .jersey-caption{font-size:7px;font-weight:700;letter-spacing:.22em;color:rgba(244,239,226,.42);text-align:center}
+
+  /* ---------------- quiz ---------------- */
+  #quiz{padding-top:calc(14px + var(--safe-t));display:flex;flex-direction:column}
+  .quiz-top{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:4px 0 14px;background:linear-gradient(180deg,rgba(6,8,18,.92),rgba(6,8,18,0))}
+  .quiz-brand{display:flex;align-items:baseline;gap:7px;font-family:var(--display);font-weight:800;letter-spacing:.06em;font-size:15px}
+  .quiz-brand span{font-family:var(--num);color:var(--gold);font-size:13px;letter-spacing:.02em}
+  .quiz-actions{display:flex;gap:6px;align-items:center}
+  .quiz-shell{flex:1;display:flex;flex-direction:column;justify-content:center;width:min(760px,100%);margin:0 auto;padding:14px 0 30px;min-height:0}
+  .quiz-card{position:relative;padding:clamp(20px,3vw,32px);border-radius:18px;border:1px solid rgba(244,239,226,.15);
+    background:linear-gradient(165deg,rgba(255,255,255,.065),rgba(8,11,22,.94) 30%,rgba(8,11,22,.97));
+    box-shadow:0 30px 100px rgba(0,0,0,.55);overflow:hidden}
+  .quiz-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:repeating-linear-gradient(90deg,var(--blau) 0 80px,var(--grana) 80px 160px)}
+  .quiz-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+  .qcat{font-size:6px;font-weight:700;letter-spacing:.2em;color:var(--gold);border:1px solid rgba(255,207,74,.3);border-radius:999px;padding:5px 8px}
+  .qcount{font-size:8px;font-weight:700;letter-spacing:.14em;color:var(--muted)}
+  .qcount b{color:var(--bone);font-size:10px}
+  .progress{display:flex;gap:3px;margin-bottom:20px}
+  .progress i{display:block;flex:1;height:4px;border-radius:999px;background:rgba(244,239,226,.1);transition:.25s}
+  .progress i.done{background:var(--green)}
+  .progress i.bad{background:var(--red)}
+  .progress i.current{background:var(--gold);box-shadow:0 0 12px rgba(255,207,74,.4)}
+  .question{font-family:var(--display);font-weight:800;font-size:clamp(20px,2.8vw,32px);line-height:1.18;letter-spacing:-.01em;margin-bottom:16px;min-height:2.2em}
+  .question:focus{outline:none}
+  .timer{display:flex;align-items:center;gap:9px;margin-bottom:20px}
+  .timer-track{flex:1;height:6px;border-radius:999px;background:rgba(244,239,226,.1);overflow:hidden}
+  .timer-track i{display:block;height:100%;width:100%;border-radius:999px;background:linear-gradient(90deg,var(--gold),#ff9a3d);transition:width .1s linear}
+  .timer.urgent .timer-track i{background:linear-gradient(90deg,#ff9a3d,var(--red))}
+  .timer-label{font-family:var(--num);font-size:13px;color:var(--bone);min-width:34px;text-align:right;font-variant-numeric:tabular-nums}
+  .options{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .option{position:relative;display:flex;align-items:center;gap:11px;text-align:left;padding:13px 14px 13px 12px;border-radius:10px;
+    border:1px solid rgba(244,239,226,.13);background:rgba(255,255,255,.035);color:rgba(244,239,226,.88);
+    font-size:12px;line-height:1.35;transition:.15s;min-height:58px}
+  .option:hover:not(:disabled){border-color:rgba(255,207,74,.55);background:rgba(255,207,74,.06);transform:translateY(-1px)}
+  .option:disabled{cursor:default}
+  .opt-key{flex:none;width:24px;height:24px;border-radius:6px;border:1px solid rgba(244,239,226,.22);
+    display:flex;align-items:center;justify-content:center;font-family:var(--num);font-size:11px;color:var(--muted);background:rgba(0,0,0,.14)}
+  .option.correct{border-color:rgba(67,209,122,.85);background:rgba(67,209,122,.14);color:#d8ffe4}
+  .option.correct .opt-key{border-color:var(--green);color:var(--green)}
+  .option.wrong{border-color:rgba(255,92,114,.85);background:rgba(255,92,114,.12);color:#ffe0e5;animation:shake .32s}
+  .option.wrong .opt-key{border-color:var(--red);color:var(--red)}
+  .option.dim{opacity:.45}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+  .feedback{margin-top:18px;padding-top:16px;border-top:1px solid rgba(244,239,226,.1);animation:reveal .25s ease-out}
+  @keyframes reveal{0%{opacity:0;transform:translateY(5px)}100%{opacity:1;transform:none}}
+  .feedback-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:7px}
+  .fb-title{font-family:var(--num);font-size:22px;letter-spacing:.03em}
+  .fb-title.good{color:var(--green)}
+  .fb-title.bad{color:var(--red)}
+  .fb-points{font-size:7px;font-weight:700;letter-spacing:.14em;color:var(--gold)}
+  .fb-text{font-size:10px;line-height:1.65;color:rgba(244,239,226,.65);margin-bottom:14px}
+  .fb-text b{color:var(--bone)}
+  .next-btn{align-self:flex-start;background:var(--bone);color:var(--ink);font-family:var(--num);font-size:14px;
+    letter-spacing:.03em;padding:10px 18px;border-radius:4px;transition:.15s}
+  .next-btn:hover{background:var(--gold);transform:translateX(3px)}
+  .quiz-footer{display:flex;align-items:center;justify-content:space-between;max-width:720px;margin:12px auto 0;
+    font-size:6px;font-weight:700;letter-spacing:.15em;color:rgba(244,239,226,.3);padding:0 4px}
+  .streak-pill{color:var(--gold);display:flex;align-items:center;gap:5px}
+
+  /* ---------------- results ---------------- */
+  #results{display:flex;align-items:center;justify-content:center}
+  .results-panel{width:min(760px,100%);margin:0 auto;padding:clamp(22px,4vw,40px);border-radius:20px;
+    border:1px solid rgba(244,239,226,.15);background:linear-gradient(165deg,rgba(255,255,255,.06),rgba(8,11,22,.95) 35%,rgba(8,11,22,.98));
+    box-shadow:0 30px 100px rgba(0,0,0,.55);position:relative;overflow:hidden}
+  .results-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:repeating-linear-gradient(90deg,var(--blau) 0 80px,var(--grana) 80px 160px)}
+  .results-top{display:flex;align-items:center;gap:clamp(18px,4vw,38px);flex-wrap:wrap;justify-content:center}
+  .score-ring{--p:0;position:relative;flex:none;width:150px;height:150px;border-radius:50%;
+    background:conic-gradient(var(--gold) calc(var(--p)*1%),rgba(244,239,226,.1) 0);
+    display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 10px 28px rgba(255,207,74,.15))}
+  .score-ring::before{content:'';position:absolute;inset:9px;border-radius:50%;background:#0a0e1c}
+  .score-ring .ring-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:2px}
+  .score-ring b{font-family:var(--num);font-size:42px;line-height:1;color:var(--bone)}
+  .score-ring span{font-size:6px;font-weight:700;letter-spacing:.16em;color:var(--muted)}
+  .result-copy{flex:1;min-width:230px;text-align:left}
+  .result-copy .eyebrow{margin-bottom:6px;font-size:7px}
+  .rank{font-family:var(--display);font-weight:800;font-size:clamp(32px,5vw,58px);line-height:.92;letter-spacing:-.02em}
+  .rank.gold{color:var(--gold)}
+  .result-line{font-size:9px;line-height:1.65;color:var(--muted);margin-top:8px}
+  .result-line b{color:var(--bone)}
+  .result-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:22px 0 16px}
+  .stat-box{padding:9px 6px;border:1px solid rgba(244,239,226,.1);border-radius:9px;background:rgba(255,255,255,.025);text-align:center}
+  .stat-box b{display:block;font-family:var(--num);font-size:22px;color:var(--bone);line-height:1}
+  .stat-box span{display:block;font-size:5px;font-weight:700;letter-spacing:.14em;color:var(--muted);margin-top:4px}
+  .result-actions{display:flex;gap:7px;flex-wrap:wrap}
+  .best-line{font-size:7px;font-weight:700;letter-spacing:.13em;color:var(--muted);margin-top:12px}
+  .best-line b{color:var(--gold)}
+  .review-toggle{margin-top:20px;width:100%;display:flex;align-items:center;justify-content:space-between;
+    border-top:1px solid rgba(244,239,226,.1);padding-top:14px;font-size:8px;font-weight:700;letter-spacing:.14em;color:var(--gold)}
+  .review-toggle span{font-size:13px;transition:.2s}
+  .review-toggle.open span{transform:rotate(180deg)}
+  .review-list{display:flex;flex-direction:column;gap:7px;margin-top:12px;max-height:360px;overflow-y:auto;padding-right:2px}
+  .review-item{padding:10px 12px;border-radius:8px;border:1px solid rgba(244,239,226,.09);background:rgba(255,255,255,.025);text-align:left}
+  .review-item.good{border-left:3px solid var(--green)}
+  .review-item.bad{border-left:3px solid var(--red)}
+  .review-q{font-size:8px;font-weight:700;line-height:1.45;color:var(--bone);margin-bottom:4px}
+  .review-a{font-size:7px;line-height:1.6;color:var(--muted)}
+  .review-a b{color:var(--green)}
+  .review-a i{color:var(--red);font-style:normal}
+  .review-explain{font-size:6.5px;line-height:1.55;color:rgba(244,239,226,.42);margin-top:3px}
+
+  /* ---------------- modals ---------------- */
+  .modal{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:20px;
+    background:rgba(3,5,11,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);overflow-y:auto}
+  .modal.hidden{display:none !important}
+  .panel{position:relative;width:min(540px,100%);background:rgba(8,11,22,.97);border:1px solid rgba(244,239,226,.16);
+    border-radius:16px;padding:28px 28px 24px;text-align:center;box-shadow:0 30px 100px rgba(0,0,0,.65);margin:auto;overflow:hidden;
+    animation:panelIn .28s cubic-bezier(.2,1.3,.4,1)}
+  @keyframes panelIn{0%{transform:translateY(10px) scale(.98);opacity:0}100%{transform:none;opacity:1}}
+  .panel::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:repeating-linear-gradient(90deg,var(--blau) 0 80px,var(--grana) 80px 160px)}
+  .panel-kicker{font-size:7px;font-weight:700;letter-spacing:.3em;color:var(--gold);margin-bottom:6px}
+  .panel-title{font-family:var(--num);font-size:clamp(32px,5.5vw,50px);line-height:.94;text-transform:uppercase}
+  .panel-sub{font-size:8px;line-height:1.7;color:var(--muted);margin-top:8px;letter-spacing:.04em}
+  .panel-actions{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+  .how-grid{display:flex;flex-direction:column;gap:7px;margin-top:15px;text-align:left}
+  .how-row{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border:1px solid rgba(244,239,226,.09);border-radius:8px;background:rgba(255,255,255,.025)}
+  .how-key{flex:none;min-width:44px;text-align:center;font-size:6px;font-weight:700;letter-spacing:.05em;color:var(--gold);
+    border:1px solid rgba(255,207,74,.3);border-radius:4px;padding:5px 4px}
+  .how-row p{font-size:7.5px;line-height:1.55;color:rgba(244,239,226,.64)}
+  .how-row b{color:var(--bone)}
+  .qr-wrap{display:flex;flex-direction:column;align-items:center;gap:9px;margin-top:14px}
+  .qr-box{background:var(--bone);border-radius:10px;padding:12px;width:min(230px,64vw);min-height:120px;display:flex;align-items:center;justify-content:center}
+  .qr-box svg{width:100%;height:auto;display:block}
+  .qr-note{font-size:8px;font-weight:700;color:#0a1024;line-height:1.5;text-align:center;padding:8px}
+  .qr-url{width:100%;max-width:360px;background:rgba(6,9,18,.7);border:1px solid rgba(244,239,226,.16);border-radius:6px;
+    padding:9px 10px;color:var(--bone);font-family:var(--ui);font-size:8px;text-align:center;outline:none}
+  .qr-url:focus{border-color:var(--gold)}
+  .share-note{font-size:7px;line-height:1.6;color:var(--muted);max-width:330px;margin-top:8px}
+  .share-note b{color:var(--gold)}
+  .confirm-sub{font-size:9px;line-height:1.6;color:var(--muted);margin-top:10px}
+
+  /* toast */
+  #toast{position:fixed;left:50%;bottom:calc(28px + var(--safe-b));transform:translateX(-50%) translateY(8px);z-index:40;
+    background:rgba(8,11,22,.95);border:1px solid rgba(255,207,74,.35);border-radius:999px;padding:9px 14px;
+    font-size:8px;font-weight:700;letter-spacing:.1em;color:var(--bone);opacity:0;pointer-events:none;transition:.2s;white-space:nowrap}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  #confetti{position:fixed;inset:0;z-index:35;pointer-events:none;overflow:hidden}
+  .confetti-piece{position:absolute;top:-20px;width:7px;height:12px;opacity:.9;animation:fall linear forwards}
+  @keyframes fall{0%{transform:translate3d(0,-10px,0) rotate(0)}100%{transform:translate3d(var(--drift),105vh,0) rotate(720deg);opacity:0}}
+
+  /* responsive */
+  @media (max-width:900px){
+    .start-wrap{grid-template-columns:1fr;gap:20px;min-height:auto;padding-top:5vh}
+    .jersey-side{display:none}
+    .start-copy{max-width:none}
+    .start-title .last{font-size:clamp(76px,19vw,138px)}
+    .start-title .sticker{right:-8px}
+  }
+  @media (max-width:720px){
+    .screen{padding:calc(16px + var(--safe-t)) calc(14px + var(--safe-r)) calc(18px + var(--safe-b)) calc(20px + var(--safe-l))}
+    .start-title .first{font-size:11px;letter-spacing:.32em;margin-bottom:8px}
+    .start-title .last{font-size:clamp(68px,20vw,118px)}
+    .start-title .quizline{font-size:clamp(20px,5.6vw,32px)}
+    .start-title .sticker{font-size:clamp(19px,5vw,28px);right:-3px;bottom:8px}
+    .tagline{font-size:14px;margin:16px 0 16px}
+    .rules{gap:6px;margin-bottom:18px}
+    .rule{font-size:6px;padding:6px 9px}
+    .start-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+    .start-actions .btn-gold{grid-column:1/-1;width:100%}
+    .start-actions .btn-ghost{justify-content:center;text-align:center}
+    .btn-gold{font-size:16px;padding:11px 20px}
+    .btn-ghost{font-size:6.5px;padding:10px 11px}
+    .start-meta{gap:12px;margin-top:16px;font-size:6px}
+    .start-footer{left:calc(20px + var(--safe-l));right:calc(14px + var(--safe-r));font-size:5.5px}
+    .start-utils{top:calc(10px + var(--safe-t));right:calc(10px + var(--safe-r))}
+    .utils-btn{font-size:6px;padding:7px 8px}
+    .bg-ghost{font-size:76vw;right:-14vw;top:2vh}
+    .bg-stripe{width:4px}
+    .quiz-brand{font-size:12px}
+    .quiz-brand span{font-size:11px}
+    .quiz-card{padding:16px 14px;border-radius:14px}
+    .quiz-meta{margin-bottom:10px}
+    .qcat{font-size:5.5px}
+    .qcount{font-size:6px}
+    .progress{margin-bottom:15px}
+    .question{font-size:clamp(19px,5.4vw,26px);margin-bottom:13px;min-height:0}
+    .timer{margin-bottom:15px}
+    .options{grid-template-columns:1fr;gap:6px}
+    .option{font-size:10px;padding:11px 11px 11px 10px;min-height:52px}
+    .opt-key{width:22px;height:22px;font-size:10px}
+    .feedback{margin-top:14px;padding-top:13px}
+    .fb-title{font-size:19px}
+    .fb-text{font-size:8px}
+    .next-btn{font-size:12px;padding:9px 15px}
+    .results-panel{padding:20px 16px;border-radius:14px}
+    .results-top{flex-direction:column;align-items:center;gap:14px}
+    .result-copy{width:100%;text-align:center}
+    .result-actions{justify-content:center}
+    .score-ring{width:118px;height:118px}
+    .score-ring b{font-size:34px}
+    .result-copy{min-width:0;text-align:center}
+    .result-copy .eyebrow{justify-content:center}
+    .rank{font-size:clamp(28px,8vw,40px)}
+    .result-stats{margin:16px 0 12px}
+    .stat-box b{font-size:19px}
+    .review-list{max-height:300px}
+    .panel{padding:22px 16px 20px}
+    .how-row p{font-size:7px}
+    .qr-box{width:min(210px,60vw)}
+  }
+  @media (max-height:760px){
+    .quiz-shell{justify-content:flex-start}
+  }
+  @media (max-height:540px) and (min-width:721px){
+    .start-wrap{padding-top:2vh}
+    .start-title .last{font-size:clamp(64px,10vw,112px)}
+    .tagline{margin:12px 0 14px}
+    .rules{margin-bottom:14px}
+    .start-footer{bottom:8px}
+    .quiz-top{padding-bottom:8px}
+    .quiz-card{padding:18px 22px}
+    .question{font-size:24px;margin-bottom:10px}
+    .timer{margin-bottom:12px}
+    .option{padding:10px 12px;min-height:48px}
+    .feedback{margin-top:12px;padding-top:10px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.001ms !important;transition-duration:.001ms !important}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="bg-pitch" aria-hidden="true"></div>
+  <div class="bg-ghost" aria-hidden="true">304</div>
+  <div class="bg-stripe" aria-hidden="true"></div>
+  <div id="grain" aria-hidden="true"></div>
+
+  <!-- ================= START ================= -->
+  <section id="start" class="screen">
+    <div class="start-utils">
+      <button id="soundBtn" class="utils-btn" aria-label="Toggle sound">SOUND ON</button>
+      <button id="shareBtn" class="utils-btn">SHARE / QR</button>
+    </div>
+    <div class="start-wrap">
+      <div class="start-copy">
+        <div class="eyebrow"><span class="pip"></span> ROCAFONDA · 304 · TRIVIA</div>
+        <div class="start-title">
+          <span class="first">LAMINE</span>
+          <span class="last">YAMAL</span>
+          <span class="quizline">THE 304 QUIZ</span>
+        </div>
+        <p class="tagline">How well do you know the kid from Rocafonda? <b>10 questions. 20 seconds each. No googling.</b></p>
+        <div class="rules">
+          <span class="rule"><b>10</b> QUESTIONS</span>
+          <span class="rule"><b>20s</b> PER QUESTION</span>
+          <span class="rule"><b>1</b> POINT EACH</span>
+        </div>
+        <div class="start-actions">
+          <button id="startBtn" class="btn-gold"><span>START THE QUIZ</span><span>→</span></button>
+          <button id="howBtn" class="btn-ghost">HOW TO PLAY</button>
+          <a class="btn-ghost" href="answers.html" target="_blank" rel="noopener">ANSWER KEY</a>
+        </div>
+        <div class="start-meta">
+          <span>BEST <b id="bestStart">—</b></span>
+          <span>FAN-MADE · FACTS CHECKED NOV 2026</span>
+        </div>
+      </div>
+      <aside class="jersey-side" aria-hidden="true">
+        <div class="jersey-card">
+          <div class="jersey">
+            <span class="jflag">ESP</span>
+            <span class="jnum">10</span>
+            <span class="jname">YAMAL</span>
+          </div>
+          <div class="jersey-tag"><span>RIGHT WING · LEFT FOOT</span><span class="jersey-304">304</span></div>
+        </div>
+        <div class="jersey-caption">ROCAFONDA · MATARÓ · 08304</div>
+      </aside>
+    </div>
+    <div class="start-footer"><span>FAN-MADE · NOT AFFILIATED</span><span>PHONE READY · GITHUB PAGES</span></div>
+  </section>
+
+  <!-- ================= QUIZ ================= -->
+  <section id="quiz" class="screen hidden">
+    <div class="quiz-top">
+      <div class="quiz-brand">YAMAL <span>304</span></div>
+      <div class="quiz-actions">
+        <button id="soundBtn2" class="icon-btn" aria-label="Toggle sound">♪</button>
+        <button id="quitBtn" class="icon-btn" aria-label="Leave quiz">✕</button>
+      </div>
+    </div>
+    <div class="quiz-shell">
+      <div class="quiz-card">
+        <div class="quiz-meta">
+          <span class="qcat" id="qCategory">ORIGINS</span>
+          <span class="qcount"><b id="qNumber">01</b> / 10 &nbsp;·&nbsp; SCORE <b id="qScore">0</b> &nbsp;·&nbsp; STREAK <b id="qStreak">0</b></span>
+        </div>
+        <div class="progress" id="progress" aria-hidden="true"></div>
+        <h2 class="question" id="questionText">Question</h2>
+        <div class="timer" id="timer">
+          <div class="timer-track"><i id="timerFill"></i></div>
+          <span class="timer-label" id="timerLabel">20s</span>
+        </div>
+        <div class="options" id="options"></div>
+        <div class="feedback hidden" id="feedback">
+          <div class="feedback-head"><span class="fb-title" id="fbTitle">CORRECT</span><span class="fb-points" id="fbPoints">+1 POINT</span></div>
+          <p class="fb-text" id="fbText"></p>
+          <button class="next-btn" id="nextBtn">NEXT QUESTION →</button>
+        </div>
+      </div>
+      <div class="quiz-footer"><span>YAMAL 304 · THE QUIZ</span><span class="streak-pill" id="streakPill">STREAK 0</span></div>
+    </div>
+  </section>
+
+  <!-- ================= RESULTS ================= -->
+  <section id="results" class="screen hidden">
+    <div class="results-panel">
+      <div class="results-top">
+        <div class="score-ring" id="scoreRing" style="--p:0">
+          <div class="ring-inner"><b id="finalScore">0</b><span>OUT OF 10</span></div>
+        </div>
+        <div class="result-copy">
+          <div class="eyebrow"><span class="pip"></span> FULL TIME · YAMAL 304</div>
+          <h2 class="rank gold" id="rankTitle">ACADEMY PROSPECT</h2>
+          <p class="result-line" id="rankLine">You scored 0 out of 10.</p>
+          <div class="result-stats">
+            <div class="stat-box"><b id="finalShots">0%</b><span>ACCURACY</span></div>
+            <div class="stat-box"><b id="finalStreak">0</b><span>BEST STREAK</span></div>
+            <div class="stat-box"><b id="finalBest">0</b><span>PERSONAL BEST</span></div>
+          </div>
+          <div class="result-actions">
+            <button id="playAgainBtn" class="btn-gold"><span>PLAY AGAIN</span><span>↻</span></button>
+            <button id="shareScoreBtn" class="btn-ghost">SHARE SCORE</button>
+            <button id="resultShareBtn" class="btn-ghost">QR CODE</button>
+            <button id="menuBtn" class="btn-ghost">MENU</button>
+          </div>
+          <div class="best-line" id="bestLine">NEW PERSONAL BEST!</div>
+        </div>
+      </div>
+      <button class="review-toggle" id="reviewToggle">REVIEW ANSWERS <span>⌄</span></button>
+      <div class="review-list hidden" id="reviewList"></div>
+    </div>
+  </section>
+
+  <!-- ================= HOW ================= -->
+  <div id="how" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="howTitle">
+    <div class="panel">
+      <div class="panel-kicker">LAMINE YAMAL · 304</div>
+      <h2 class="panel-title" id="howTitle">HOW TO PLAY</h2>
+      <div class="how-grid">
+        <div class="how-row"><span class="how-key">PICK</span><p>Tap or click one of the four answers. You can also press <b>1 / 2 / 3 / 4</b>.</p></div>
+        <div class="how-row"><span class="how-key">TIME</span><p>You have <b>20 seconds</b> per question. When the bar runs out, the answer is revealed and the question is lost.</p></div>
+        <div class="how-row"><span class="how-key">SCORE</span><p>One point per correct answer. Twelve questions per game. Your <b>best score</b> is saved on this device.</p></div>
+        <div class="how-row"><span class="how-key">NEXT</span><p>After each answer, read the explanation and tap <b>NEXT QUESTION</b> or press <b>Enter</b>.</p></div>
+        <div class="how-row"><span class="how-key">CODE</span><p>No googling. No pausing the clock. Trust your knowledge of the kid from Rocafonda.</p></div>
+      </div>
+      <div class="panel-actions"><button id="howCloseBtn" class="btn-gold"><span>GOT IT</span><span>→</span></button></div>
+    </div>
+  </div>
+
+  <!-- ================= QUIT CONFIRM ================= -->
+  <div id="confirm" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="panel">
+      <div class="panel-kicker">LEAVE THE QUIZ?</div>
+      <h2 class="panel-title" id="confirmTitle">END THIS RUN?</h2>
+      <p class="confirm-sub">Your progress in this quiz will be lost. Your personal best stays safe.</p>
+      <div class="panel-actions">
+        <button id="confirmLeaveBtn" class="btn-gold"><span>LEAVE</span><span>→</span></button>
+        <button id="confirmStayBtn" class="btn-ghost">KEEP PLAYING</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SHARE / QR ================= -->
+  <div id="share" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+    <div class="panel">
+      <div class="panel-kicker">SHARE THE QUIZ</div>
+      <h2 class="panel-title" id="shareTitle">SCAN & PLAY</h2>
+      <p class="panel-sub">Point a phone camera at the QR code. Send it to a friend and compare scores.</p>
+      <div class="qr-wrap">
+        <div class="qr-box" id="qrBox"><span class="qr-note">QR will appear once this page is hosted.</span></div>
+        <input id="qrUrl" class="qr-url" type="url" spellcheck="false" aria-label="Quiz URL">
+        <button id="copyLinkBtn" class="btn-ghost">COPY LINK</button>
+      </div>
+      <p class="share-note" id="shareNote">Host this folder on <b>GitHub Pages</b>, then this QR opens the live quiz.</p>
+      <div class="panel-actions"><button id="shareCloseBtn" class="btn-gold"><span>CLOSE</span><span>→</span></button></div>
+    </div>
+  </div>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+  <div id="confetti" aria-hidden="true"></div>
+</div>
+
+<script src="qrcode.min.js"></script>
+<script src="questions.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

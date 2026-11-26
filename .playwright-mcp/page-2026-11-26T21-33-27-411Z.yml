@@ -1,0 +1,31 @@
+- generic [ref=f11e2]:
+  - generic [aria-hidden]: "304"
+  - generic [ref=f11e3]:
+    - generic [ref=f11e4]:
+      - button "Toggle sound" [ref=f11e5] [cursor=pointer]: SOUND ON
+      - button "SHARE / QR" [ref=f11e6] [cursor=pointer]
+    - generic [ref=f11e8]:
+      - generic [ref=f11e9]: ROCAFONDA · 304 · TRIVIA
+      - generic [ref=f11e11]:
+        - generic [ref=f11e12]: LAMINE
+        - generic [ref=f11e13]: YAMAL
+        - generic [ref=f11e14]: THE 304 QUIZ
+      - paragraph [ref=f11e15]: How well do you know the kid from Rocafonda? 10 questions. 20 seconds each. No googling.
+      - generic [ref=f11e16]:
+        - generic [ref=f11e17]: 10 QUESTIONS
+        - generic [ref=f11e18]: 20s PER QUESTION
+        - generic [ref=f11e19]: 1 POINT EACH
+      - generic [ref=f11e20]:
+        - button "START THE QUIZ →" [ref=f11e21] [cursor=pointer]:
+          - generic [ref=f11e22]: START THE QUIZ
+          - generic [ref=f11e23]: →
+        - button "HOW TO PLAY" [ref=f11e24] [cursor=pointer]
+        - link "ANSWER KEY" [ref=f11e25] [cursor=pointer]:
+          - /url: answers.html
+      - generic [ref=f11e26]:
+        - generic [ref=f11e27]: BEST 4/10
+        - generic [ref=f11e28]: FAN-MADE · FACTS CHECKED NOV 2026
+    - generic:
+      - generic: FAN-MADE · NOT AFFILIATED
+      - generic: PHONE READY · GITHUB PAGES
+  - status
