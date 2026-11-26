@@ -2,7 +2,11 @@
 
 A normal, phone-friendly trivia game about **Lamine Yamal**. Ten questions per game, 60 seconds per question, explanations after every answer, best score saved on the device, and a built-in QR code to share the live quiz.
 
-**Live quiz:** once deployed, the in-game **SHARE / QR** button generates a QR for the current URL. No build step.
+**Live quiz:** https://gopi-gith.github.io/yamal-304-quiz/
+
+**Printable answer key:** https://gopi-gith.github.io/yamal-304-quiz/YAMAL-304-Answer-Key.pdf
+
+The in-game **SHARE / QR** button generates a QR for the current URL. No build step.
 
 ## How it works
 
