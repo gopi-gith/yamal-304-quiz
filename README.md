@@ -19,21 +19,16 @@ The in-game **SHARE / QR** button generates a QR for the current URL. No build s
 
 ## Deploy on GitHub Pages
 
-Everything is static: `index.html`, `app.js`, `questions.js`, `answers.html`, `qrcode.min.js`, `icon.svg`, `manifest.json`.
+Everything is static — no build step.
 
-### Option A — GitHub Actions (recommended)
+1. Push all files to the `main` branch.
+2. In the repository: **Settings → Pages → Build and deployment → Source: Deploy from a branch**.
+3. Choose **main** and **/ (root)**, then Save.
+4. Open the live URL.
+5. Tap **SHARE / QR** in the game. The QR points at that live URL. Show it to friends.
 
-1. Create a GitHub repository and push all files to the `main` branch.
-2. In the repository: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-3. The included workflow (`.github/workflows/pages.yml`) deploys the site on every push to `main`.
-4. Open `https://YOUR-USERNAME.github.io/YOUR-REPO/`.
-5. Tap **SHARE / QR** in the game. The generated QR points at that live URL. Show it to friends.
-
-### Option B — deploy from a branch
-
-1. Push the files to `main`.
-2. **Settings → Pages → Source: Deploy from a branch → main → / (root)**.
-3. Open the live URL and use **SHARE / QR**.
+The live copy is already deployed at:
+**https://gopi-gith.github.io/yamal-304-quiz/**
 
 ### QR / sharing
 
@@ -59,10 +54,10 @@ Opening `index.html` directly also loads the quiz, but clipboard/QR behavior may
 - `app.js` — quiz logic, timer, review, QR/share
 - `questions.js` — shared 32-question bank (used by the game and the answer key)
 - `answers.html` — printable quiz-master answer key with a QR to the live quiz
+- `YAMAL-304-Answer-Key.pdf` — ready-to-print PDF of the answer key
 - `qrcode.min.js` — QR generator (vendored, works offline)
 - `icon.svg`, `manifest.json` — phone install icon / metadata
 - `.nojekyll` — static hosting hint
-- `.github/workflows/pages.yml` — GitHub Pages deployment
 
 Fan-made quiz. Not affiliated with Lamine Yamal, FC Barcelona, or any league.
 
