@@ -18,38 +18,6 @@
   const TIME_PER_QUESTION = 60;
   const BEST_KEY = 'yamal304-best-v2';
   const SOUND_KEY = 'yamal304-sound';
-  const SAFE_KEY = 'yamal304-safe-zone';
-
-  /* Safe-zone presets. `auto` leaves env(safe-area-inset-*) in charge.
-     Manual presets use CSS pixels and switch with the orientation. */
-  const SAFE_PRESETS = {
-    auto: { label: 'AUTO', portrait: null, landscape: null },
-    computer: {
-      label: 'COMPUTER',
-      portrait: { t: 0, b: 0, l: 0, r: 0 },
-      landscape: { t: 0, b: 0, l: 0, r: 0 }
-    },
-    island: {
-      label: 'IPHONE ISLAND',
-      portrait: { t: 59, b: 34, l: 0, r: 0 },
-      landscape: { t: 0, b: 21, l: 59, r: 59 }
-    },
-    notch: {
-      label: 'IPHONE NOTCH',
-      portrait: { t: 47, b: 34, l: 0, r: 0 },
-      landscape: { t: 0, b: 21, l: 47, r: 47 }
-    },
-    android: {
-      label: 'ANDROID',
-      portrait: { t: 24, b: 16, l: 0, r: 0 },
-      landscape: { t: 0, b: 8, l: 0, r: 0 }
-    },
-    none: {
-      label: 'NONE',
-      portrait: { t: 0, b: 0, l: 0, r: 0 },
-      landscape: { t: 0, b: 0, l: 0, r: 0 }
-    }
-  };
 
   const state = {
     deck: [],
@@ -64,8 +32,6 @@
     timerId: null,
     timerPausedMs: 0,
     pausedByModal: false,
-    safePreset: 'auto',
-    safePaused: false,
     phase: 'start',
     soundOn: true,
     best: 0
@@ -96,19 +62,6 @@
     qrUrl: $('qrUrl'),
     copyLinkBtn: $('copyLinkBtn'),
     shareNote: $('shareNote'),
-    safe: {
-      modal: $('safe'),
-      btn: $('safeBtn'),
-      btn2: $('safeBtn2'),
-      closeBtn: $('safeCloseBtn'),
-      grid: $('safeGrid'),
-      orientation: $('safeOrientation'),
-      top: $('safeTop'),
-      bottom: $('safeBottom'),
-      left: $('safeLeft'),
-      right: $('safeRight'),
-      note: $('safeNote')
-    },
     toast: $('toast'),
     confetti: $('confetti'),
     quiz: {
@@ -191,8 +144,7 @@
   function isModalOpen() {
     return !el.how.classList.contains('hidden') ||
       !el.confirm.classList.contains('hidden') ||
-      !el.share.classList.contains('hidden') ||
-      !el.safe.modal.classList.contains('hidden');
+      !el.share.classList.contains('hidden');
   }
 
   function anyOverlay() {
@@ -277,121 +229,10 @@
     Sound.setOn(state.soundOn);
     setSoundUI();
     updateBestUI();
-    loadSafeZone();
   }
 
   function updateBestUI() {
     el.bestStart.textContent = state.best > 0 ? `${state.best}/${QUIZ_SIZE}` : '—';
-  }
-
-  /* ---------------- safe zone ---------------- */
-  let autoPick = 'env';
-
-  function isLandscape() {
-    return window.matchMedia('(orientation: landscape)').matches;
-  }
-
-  function readInset(key) {
-    const raw = getComputedStyle(document.documentElement).getPropertyValue(`--safe-${key}`);
-    const n = parseFloat(raw);
-    return Number.isFinite(n) ? Math.round(n) : 0;
-  }
-
-  function clearSafeOverrides(root) {
-    ['t', 'b', 'l', 'r'].forEach((key) => root.style.removeProperty(`--safe-${key}`));
-  }
-
-  // True when the browser reports a real notch / home-bar inset.
-  function hasRealInsets() {
-    return ['t', 'b', 'l', 'r'].some((key) => readInset(key) > 0);
-  }
-
-  // Auto mode: if the browser exposes no safe area, guess from the device.
-  function detectAutoPreset() {
-    const ua = navigator.userAgent || '';
-    const touch = navigator.maxTouchPoints || 0;
-    const isIPhone = /iPhone|iPod/i.test(ua);
-    const isIPad = /iPad/i.test(ua) || (/Macintosh/i.test(ua) && touch > 1);
-    const isAndroid = /Android/i.test(ua);
-    const shortSide = Math.min(window.screen.width, window.screen.height);
-    const longSide = Math.max(window.screen.width, window.screen.height);
-    const tall = shortSide > 0 ? longSide / shortSide : 1;
-
-    if (isIPhone) {
-      // Modern Face ID iPhones are noticeably taller than the home-button SE.
-      return tall >= 1.95 ? 'island' : 'none';
-    }
-    if (isIPad) return 'computer';
-    if (isAndroid) return tall >= 1.5 ? 'android' : 'computer';
-    return 'computer';
-  }
-
-  function syncSafeUI() {
-    const landscape = isLandscape();
-    document.querySelectorAll('.safe-opt').forEach((btn) => {
-      btn.setAttribute('aria-checked', String(btn.dataset.preset === state.safePreset));
-    });
-    el.safe.orientation.textContent = landscape ? 'LANDSCAPE' : 'PORTRAIT';
-    el.safe.top.textContent = readInset('t');
-    el.safe.bottom.textContent = readInset('b');
-    el.safe.left.textContent = readInset('l');
-    el.safe.right.textContent = readInset('r');
-    if (state.safePreset === 'auto') {
-      el.safe.note.innerHTML = autoPick === 'env'
-        ? 'Auto is using this screen\'s real safe area. Values in pixels, updated live.'
-        : `Auto picked <b>${SAFE_PRESETS[autoPick].label}</b> for this screen. Tap any preset to override it.`;
-    } else {
-      el.safe.note.innerHTML = 'Applied instantly and saved on this device. Values in pixels, updated live.';
-    }
-  }
-
-  function applySafeZone(preset, persist) {
-    const id = SAFE_PRESETS[preset] ? preset : 'auto';
-    state.safePreset = id;
-    const root = document.documentElement;
-
-    // Drop any old overrides first so env(safe-area-inset-*) can be measured.
-    clearSafeOverrides(root);
-
-    let applied = id;
-    if (id === 'auto') {
-      if (hasRealInsets()) {
-        applied = 'env';
-        autoPick = 'env';
-      } else {
-        autoPick = detectAutoPreset();
-        applied = autoPick;
-      }
-    } else {
-      autoPick = id;
-    }
-
-    const cfg = SAFE_PRESETS[applied];
-    const values = cfg ? (isLandscape() ? cfg.landscape : cfg.portrait) : null;
-    if (values) {
-      root.style.setProperty('--safe-t', `${values.t}px`);
-      root.style.setProperty('--safe-b', `${values.b}px`);
-      root.style.setProperty('--safe-l', `${values.l}px`);
-      root.style.setProperty('--safe-r', `${values.r}px`);
-    }
-
-    if (persist) {
-      try { localStorage.setItem(SAFE_KEY, id); } catch (e) {}
-    }
-    syncSafeUI();
-  }
-
-  function loadSafeZone() {
-    let id = 'auto';
-    try {
-      const saved = localStorage.getItem(SAFE_KEY);
-      if (saved && SAFE_PRESETS[saved]) id = saved;
-    } catch (e) {}
-    applySafeZone(id, false);
-  }
-
-  function handleOrientation() {
-    applySafeZone(state.safePreset, false);
   }
 
   /* ---------------- deck ---------------- */
@@ -805,29 +646,10 @@
       resumeTimer();
     }
   }
-  function openSafe() {
-    if (state.phase === 'quiz' && !state.answered && state.timerId) {
-      state.safePaused = true;
-      pauseTimer();
-    }
-    applySafeZone(state.safePreset, false);
-    el.safe.modal.classList.remove('hidden');
-    Sound.click();
-  }
-  function closeSafe() {
-    el.safe.modal.classList.add('hidden');
-    if (state.safePaused) {
-      state.safePaused = false;
-      resumeTimer();
-    }
-    Sound.click();
-  }
   function closeAllModals() {
     el.how.classList.add('hidden');
     el.confirm.classList.add('hidden');
     el.share.classList.add('hidden');
-    el.safe.modal.classList.add('hidden');
-    state.safePaused = false;
   }
 
   /* ---------------- events ---------------- */
@@ -854,16 +676,6 @@
   el.results.shareBtn.addEventListener('click', openShare);
   el.shareCloseBtn.addEventListener('click', () => { Sound.click(); closeShare(); });
   el.copyLinkBtn.addEventListener('click', copyLink);
-  el.safe.btn.addEventListener('click', openSafe);
-  el.safe.btn2.addEventListener('click', openSafe);
-  el.safe.closeBtn.addEventListener('click', closeSafe);
-  el.safe.grid.addEventListener('click', (e) => {
-    const btn = e.target.closest('.safe-opt');
-    if (!btn) return;
-    applySafeZone(btn.dataset.preset, true);
-    Sound.click();
-    toast(`SAFE ZONE · ${SAFE_PRESETS[state.safePreset].label}`);
-  });
   el.quiz.quitBtn.addEventListener('click', openConfirm);
   el.confirmLeaveBtn.addEventListener('click', () => {
     Sound.click();
@@ -885,7 +697,6 @@
       if (modal === el.confirm) closeConfirm(true);
       else if (modal === el.share) closeShare();
       else if (modal === el.how) closeHow();
-      else if (modal === el.safe.modal) closeSafe();
     });
   });
 
@@ -896,7 +707,6 @@
       if (key === 'Escape') {
         if (!el.confirm.classList.contains('hidden')) closeConfirm(true);
         else if (!el.share.classList.contains('hidden')) closeShare();
-        else if (!el.safe.modal.classList.contains('hidden')) closeSafe();
         else if (!el.how.classList.contains('hidden')) closeHow();
         e.preventDefault();
       }
@@ -950,11 +760,6 @@
   window.addEventListener('focus', () => {
     if (state.phase === 'quiz' && !state.answered && !isModalOpen()) resumeTimer();
   });
-
-  // Re-apply the safe-zone preset when the phone rotates.
-  const orientQuery = window.matchMedia('(orientation: landscape)');
-  if (orientQuery.addEventListener) orientQuery.addEventListener('change', handleOrientation);
-  else if (orientQuery.addListener) orientQuery.addListener(handleOrientation);
 
   /* ---------------- boot ---------------- */
   loadStored();
