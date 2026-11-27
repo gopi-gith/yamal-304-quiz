@@ -15,7 +15,6 @@ The in-game **SHARE / QR** button generates a QR for the current URL. No build s
 - 60-second timer per question. `Enter` advances after an answer.
 - One point per correct answer. Personal best is stored in `localStorage`.
 - Results screen with rank, accuracy, best streak, and a full answer review.
-- Phone-friendly layout with safe-area support for notches and home bars.
 - Facts checked **2027**.
 
 ## Deploy on GitHub Pages
@@ -57,8 +56,7 @@ Opening `index.html` directly also loads the quiz, but clipboard/QR behavior may
 - `answers.html` — printable quiz-master answer key with a QR to the live quiz
 - `YAMAL-304-Answer-Key.pdf` — ready-to-print PDF of the answer key
 - `qrcode.min.js` — QR generator (vendored, works offline)
-- `icon.svg`, `icon-180.png`, `icon-192.png`, `icon-512.png` — phone install icons
-- `manifest.json` — PWA metadata (standalone, rotation-friendly)
+- `icon.svg`, `manifest.json` — phone install icon / metadata
 - `.nojekyll` — static hosting hint
 
 Fan-made quiz. Not affiliated with Lamine Yamal, FC Barcelona, or any league.
