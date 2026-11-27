@@ -290,7 +290,6 @@
   .safe-opt[aria-checked="true"]{border-color:rgba(255,207,74,.75);background:rgba(255,207,74,.09)}
   .safe-opt[aria-checked="true"] b{color:var(--gold)}
   .safe-opt[aria-checked="true"]::after{background:var(--gold);border-color:var(--gold);box-shadow:0 0 9px rgba(255,207,74,.75)}
-  .safe-opt[data-preset="none"]{grid-column:1/-1}
   .safe-readout{display:flex;gap:5px;margin-top:12px}
   .safe-readout span{flex:1;border:1px solid rgba(244,239,226,.09);border-radius:7px;background:rgba(255,255,255,.025);
     padding:7px 3px 6px;font-size:5.5px;font-weight:700;letter-spacing:.12em;color:var(--muted);text-align:center}
@@ -402,7 +401,6 @@
     #safe .panel-title{font-size:34px}
     #safe .safe-grid{grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
     #safe .safe-opt{padding:8px 22px 8px 9px}
-    #safe .safe-opt[data-preset="none"]{grid-column:auto}
     #safe .safe-opt b{font-size:11px}
     #safe .safe-opt span{font-size:5.5px}
     #safe .safe-readout{margin-top:8px}
@@ -545,7 +543,7 @@
         <div class="how-row"><span class="how-key">TIME</span><p>You have <b>60 seconds</b> per question. When the bar runs out, the answer is revealed and the question is lost.</p></div>
         <div class="how-row"><span class="how-key">SCORE</span><p>One point per correct answer. Ten questions per game. Your <b>best score</b> is saved on this device.</p></div>
         <div class="how-row"><span class="how-key">NEXT</span><p>After each answer, read the explanation and tap <b>NEXT QUESTION</b> or press <b>Enter</b>.</p></div>
-        <div class="how-row"><span class="how-key">FIT</span><p>On a phone, tap <b>SAFE ZONE</b> to match your notch, Dynamic Island or gesture bar. The choice is saved for next time.</p></div>
+        <div class="how-row"><span class="how-key">FIT</span><p>Tap <b>SAFE ZONE</b> to let Auto detect your phone, or pick iPhone Island, iPhone Notch, Android, Computer or None. The choice is saved.</p></div>
         <div class="how-row"><span class="how-key">CODE</span><p>No googling. No pausing the clock. Trust your knowledge of the kid from Rocafonda.</p></div>
       </div>
       <div class="panel-actions"><button id="howCloseBtn" class="btn-gold"><span>GOT IT</span><span>→</span></button></div>
@@ -570,10 +568,13 @@
     <div class="panel">
       <div class="panel-kicker">SCREEN FIT · <span class="safe-orient" id="safeOrientation">PORTRAIT</span></div>
       <h2 class="panel-title" id="safeTitle">SAFE ZONE</h2>
-      <p class="panel-sub">Pick the preset that matches your phone. It keeps buttons and text clear of the notch, camera island and home bar — in portrait and landscape.</p>
+      <p class="panel-sub">Auto detects your phone and applies the right safe area. You can also pick a preset for an iPhone island, notch, Android phone — or a computer.</p>
       <div class="safe-grid" id="safeGrid" role="radiogroup" aria-label="Safe zone preset">
         <button type="button" class="safe-opt" data-preset="auto" role="radio" aria-checked="true">
-          <b>Auto</b><span>This phone's real safe area. Recommended.</span>
+          <b>Auto</b><span>Detects this phone by itself.</span>
+        </button>
+        <button type="button" class="safe-opt" data-preset="computer" role="radio" aria-checked="false">
+          <b>Computer</b><span>Laptop or desktop screen.</span>
         </button>
         <button type="button" class="safe-opt" data-preset="island" role="radio" aria-checked="false">
           <b>iPhone Island</b><span>Dynamic Island iPhones.</span>

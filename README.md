@@ -15,7 +15,7 @@ The in-game **SHARE / QR** button generates a QR for the current URL. No build s
 - 60-second timer per question. `Enter` advances after an answer.
 - One point per correct answer. Personal best is stored in `localStorage`.
 - Results screen with rank, accuracy, best streak, and a full answer review.
-- **Safe Zone** presets for notched phones: Auto, iPhone Dynamic Island, iPhone Notch, Android, or None. Orientation-aware and saved on the device.
+- **Safe Zone** presets: Auto (detects the phone), Computer, iPhone Dynamic Island, iPhone Notch, Android, or None. Orientation-aware and saved on the device.
 - Facts checked **2027**.
 
 ## Deploy on GitHub Pages

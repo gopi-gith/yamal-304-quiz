@@ -24,6 +24,11 @@
      Manual presets use CSS pixels and switch with the orientation. */
   const SAFE_PRESETS = {
     auto: { label: 'AUTO', portrait: null, landscape: null },
+    computer: {
+      label: 'COMPUTER',
+      portrait: { t: 0, b: 0, l: 0, r: 0 },
+      landscape: { t: 0, b: 0, l: 0, r: 0 }
+    },
     island: {
       label: 'IPHONE ISLAND',
       portrait: { t: 59, b: 34, l: 0, r: 0 },
@@ -280,6 +285,8 @@
   }
 
   /* ---------------- safe zone ---------------- */
+  let autoPick = 'env';
+
   function isLandscape() {
     return window.matchMedia('(orientation: landscape)').matches;
   }
@@ -288,6 +295,35 @@
     const raw = getComputedStyle(document.documentElement).getPropertyValue(`--safe-${key}`);
     const n = parseFloat(raw);
     return Number.isFinite(n) ? Math.round(n) : 0;
+  }
+
+  function clearSafeOverrides(root) {
+    ['t', 'b', 'l', 'r'].forEach((key) => root.style.removeProperty(`--safe-${key}`));
+  }
+
+  // True when the browser reports a real notch / home-bar inset.
+  function hasRealInsets() {
+    return ['t', 'b', 'l', 'r'].some((key) => readInset(key) > 0);
+  }
+
+  // Auto mode: if the browser exposes no safe area, guess from the device.
+  function detectAutoPreset() {
+    const ua = navigator.userAgent || '';
+    const touch = navigator.maxTouchPoints || 0;
+    const isIPhone = /iPhone|iPod/i.test(ua);
+    const isIPad = /iPad/i.test(ua) || (/Macintosh/i.test(ua) && touch > 1);
+    const isAndroid = /Android/i.test(ua);
+    const shortSide = Math.min(window.screen.width, window.screen.height);
+    const longSide = Math.max(window.screen.width, window.screen.height);
+    const tall = shortSide > 0 ? longSide / shortSide : 1;
+
+    if (isIPhone) {
+      // Modern Face ID iPhones are noticeably taller than the home-button SE.
+      return tall >= 1.95 ? 'island' : 'none';
+    }
+    if (isIPad) return 'computer';
+    if (isAndroid) return tall >= 1.5 ? 'android' : 'computer';
+    return 'computer';
   }
 
   function syncSafeUI() {
@@ -300,26 +336,43 @@
     el.safe.bottom.textContent = readInset('b');
     el.safe.left.textContent = readInset('l');
     el.safe.right.textContent = readInset('r');
-    el.safe.note.innerHTML = state.safePreset === 'auto'
-      ? 'Using this phone\'s real safe area. Values in pixels, updated live.'
-      : 'Applied instantly and saved on this device. Values in pixels, updated live.';
+    if (state.safePreset === 'auto') {
+      el.safe.note.innerHTML = autoPick === 'env'
+        ? 'Auto is using this screen\'s real safe area. Values in pixels, updated live.'
+        : `Auto picked <b>${SAFE_PRESETS[autoPick].label}</b> for this screen. Tap any preset to override it.`;
+    } else {
+      el.safe.note.innerHTML = 'Applied instantly and saved on this device. Values in pixels, updated live.';
+    }
   }
 
   function applySafeZone(preset, persist) {
     const id = SAFE_PRESETS[preset] ? preset : 'auto';
     state.safePreset = id;
     const root = document.documentElement;
-    const cfg = SAFE_PRESETS[id];
-    const values = isLandscape() ? cfg.landscape : cfg.portrait;
 
+    // Drop any old overrides first so env(safe-area-inset-*) can be measured.
+    clearSafeOverrides(root);
+
+    let applied = id;
+    if (id === 'auto') {
+      if (hasRealInsets()) {
+        applied = 'env';
+        autoPick = 'env';
+      } else {
+        autoPick = detectAutoPreset();
+        applied = autoPick;
+      }
+    } else {
+      autoPick = id;
+    }
+
+    const cfg = SAFE_PRESETS[applied];
+    const values = cfg ? (isLandscape() ? cfg.landscape : cfg.portrait) : null;
     if (values) {
       root.style.setProperty('--safe-t', `${values.t}px`);
       root.style.setProperty('--safe-b', `${values.b}px`);
       root.style.setProperty('--safe-l', `${values.l}px`);
       root.style.setProperty('--safe-r', `${values.r}px`);
-    } else {
-      // Auto: drop overrides so env(safe-area-inset-*) applies again.
-      ['t', 'b', 'l', 'r'].forEach((key) => root.style.removeProperty(`--safe-${key}`));
     }
 
     if (persist) {
