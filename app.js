@@ -1,14 +1,14 @@
 /* ============================================================
    YAMAL 304 — The Lamine Yamal Quiz
    A normal, phone-friendly trivia game. No build step.
-   Facts checked November 2026.
+   Facts checked 2027.
    ============================================================ */
 (() => {
   'use strict';
 
   /* ---------------- questions ----------------
      level 1 = easy, 2 = medium, 3 = hard.
-     Every game draws 4 easy + 4 medium + 4 hard.
+     Every game draws 4 easy + 4 medium + 2 tough.
      Explanations are shown after each answer.
   */
   const QUESTIONS = Array.isArray(window.YAMAL_QUESTIONS) ? window.YAMAL_QUESTIONS : [];
@@ -18,6 +18,33 @@
   const TIME_PER_QUESTION = 60;
   const BEST_KEY = 'yamal304-best-v2';
   const SOUND_KEY = 'yamal304-sound';
+  const SAFE_KEY = 'yamal304-safe-zone';
+
+  /* Safe-zone presets. `auto` leaves env(safe-area-inset-*) in charge.
+     Manual presets use CSS pixels and switch with the orientation. */
+  const SAFE_PRESETS = {
+    auto: { label: 'AUTO', portrait: null, landscape: null },
+    island: {
+      label: 'IPHONE ISLAND',
+      portrait: { t: 59, b: 34, l: 0, r: 0 },
+      landscape: { t: 0, b: 21, l: 59, r: 59 }
+    },
+    notch: {
+      label: 'IPHONE NOTCH',
+      portrait: { t: 47, b: 34, l: 0, r: 0 },
+      landscape: { t: 0, b: 21, l: 47, r: 47 }
+    },
+    android: {
+      label: 'ANDROID',
+      portrait: { t: 24, b: 16, l: 0, r: 0 },
+      landscape: { t: 0, b: 8, l: 0, r: 0 }
+    },
+    none: {
+      label: 'NONE',
+      portrait: { t: 0, b: 0, l: 0, r: 0 },
+      landscape: { t: 0, b: 0, l: 0, r: 0 }
+    }
+  };
 
   const state = {
     deck: [],
@@ -32,6 +59,8 @@
     timerId: null,
     timerPausedMs: 0,
     pausedByModal: false,
+    safePreset: 'auto',
+    safePaused: false,
     phase: 'start',
     soundOn: true,
     best: 0
@@ -62,6 +91,19 @@
     qrUrl: $('qrUrl'),
     copyLinkBtn: $('copyLinkBtn'),
     shareNote: $('shareNote'),
+    safe: {
+      modal: $('safe'),
+      btn: $('safeBtn'),
+      btn2: $('safeBtn2'),
+      closeBtn: $('safeCloseBtn'),
+      grid: $('safeGrid'),
+      orientation: $('safeOrientation'),
+      top: $('safeTop'),
+      bottom: $('safeBottom'),
+      left: $('safeLeft'),
+      right: $('safeRight'),
+      note: $('safeNote')
+    },
     toast: $('toast'),
     confetti: $('confetti'),
     quiz: {
@@ -144,7 +186,8 @@
   function isModalOpen() {
     return !el.how.classList.contains('hidden') ||
       !el.confirm.classList.contains('hidden') ||
-      !el.share.classList.contains('hidden');
+      !el.share.classList.contains('hidden') ||
+      !el.safe.modal.classList.contains('hidden');
   }
 
   function anyOverlay() {
@@ -229,10 +272,73 @@
     Sound.setOn(state.soundOn);
     setSoundUI();
     updateBestUI();
+    loadSafeZone();
   }
 
   function updateBestUI() {
     el.bestStart.textContent = state.best > 0 ? `${state.best}/${QUIZ_SIZE}` : '—';
+  }
+
+  /* ---------------- safe zone ---------------- */
+  function isLandscape() {
+    return window.matchMedia('(orientation: landscape)').matches;
+  }
+
+  function readInset(key) {
+    const raw = getComputedStyle(document.documentElement).getPropertyValue(`--safe-${key}`);
+    const n = parseFloat(raw);
+    return Number.isFinite(n) ? Math.round(n) : 0;
+  }
+
+  function syncSafeUI() {
+    const landscape = isLandscape();
+    document.querySelectorAll('.safe-opt').forEach((btn) => {
+      btn.setAttribute('aria-checked', String(btn.dataset.preset === state.safePreset));
+    });
+    el.safe.orientation.textContent = landscape ? 'LANDSCAPE' : 'PORTRAIT';
+    el.safe.top.textContent = readInset('t');
+    el.safe.bottom.textContent = readInset('b');
+    el.safe.left.textContent = readInset('l');
+    el.safe.right.textContent = readInset('r');
+    el.safe.note.innerHTML = state.safePreset === 'auto'
+      ? 'Using this phone\'s real safe area. Values in pixels, updated live.'
+      : 'Applied instantly and saved on this device. Values in pixels, updated live.';
+  }
+
+  function applySafeZone(preset, persist) {
+    const id = SAFE_PRESETS[preset] ? preset : 'auto';
+    state.safePreset = id;
+    const root = document.documentElement;
+    const cfg = SAFE_PRESETS[id];
+    const values = isLandscape() ? cfg.landscape : cfg.portrait;
+
+    if (values) {
+      root.style.setProperty('--safe-t', `${values.t}px`);
+      root.style.setProperty('--safe-b', `${values.b}px`);
+      root.style.setProperty('--safe-l', `${values.l}px`);
+      root.style.setProperty('--safe-r', `${values.r}px`);
+    } else {
+      // Auto: drop overrides so env(safe-area-inset-*) applies again.
+      ['t', 'b', 'l', 'r'].forEach((key) => root.style.removeProperty(`--safe-${key}`));
+    }
+
+    if (persist) {
+      try { localStorage.setItem(SAFE_KEY, id); } catch (e) {}
+    }
+    syncSafeUI();
+  }
+
+  function loadSafeZone() {
+    let id = 'auto';
+    try {
+      const saved = localStorage.getItem(SAFE_KEY);
+      if (saved && SAFE_PRESETS[saved]) id = saved;
+    } catch (e) {}
+    applySafeZone(id, false);
+  }
+
+  function handleOrientation() {
+    applySafeZone(state.safePreset, false);
   }
 
   /* ---------------- deck ---------------- */
@@ -646,10 +752,29 @@
       resumeTimer();
     }
   }
+  function openSafe() {
+    if (state.phase === 'quiz' && !state.answered && state.timerId) {
+      state.safePaused = true;
+      pauseTimer();
+    }
+    applySafeZone(state.safePreset, false);
+    el.safe.modal.classList.remove('hidden');
+    Sound.click();
+  }
+  function closeSafe() {
+    el.safe.modal.classList.add('hidden');
+    if (state.safePaused) {
+      state.safePaused = false;
+      resumeTimer();
+    }
+    Sound.click();
+  }
   function closeAllModals() {
     el.how.classList.add('hidden');
     el.confirm.classList.add('hidden');
     el.share.classList.add('hidden');
+    el.safe.modal.classList.add('hidden');
+    state.safePaused = false;
   }
 
   /* ---------------- events ---------------- */
@@ -676,6 +801,16 @@
   el.results.shareBtn.addEventListener('click', openShare);
   el.shareCloseBtn.addEventListener('click', () => { Sound.click(); closeShare(); });
   el.copyLinkBtn.addEventListener('click', copyLink);
+  el.safe.btn.addEventListener('click', openSafe);
+  el.safe.btn2.addEventListener('click', openSafe);
+  el.safe.closeBtn.addEventListener('click', closeSafe);
+  el.safe.grid.addEventListener('click', (e) => {
+    const btn = e.target.closest('.safe-opt');
+    if (!btn) return;
+    applySafeZone(btn.dataset.preset, true);
+    Sound.click();
+    toast(`SAFE ZONE · ${SAFE_PRESETS[state.safePreset].label}`);
+  });
   el.quiz.quitBtn.addEventListener('click', openConfirm);
   el.confirmLeaveBtn.addEventListener('click', () => {
     Sound.click();
@@ -697,6 +832,7 @@
       if (modal === el.confirm) closeConfirm(true);
       else if (modal === el.share) closeShare();
       else if (modal === el.how) closeHow();
+      else if (modal === el.safe.modal) closeSafe();
     });
   });
 
@@ -707,6 +843,7 @@
       if (key === 'Escape') {
         if (!el.confirm.classList.contains('hidden')) closeConfirm(true);
         else if (!el.share.classList.contains('hidden')) closeShare();
+        else if (!el.safe.modal.classList.contains('hidden')) closeSafe();
         else if (!el.how.classList.contains('hidden')) closeHow();
         e.preventDefault();
       }
@@ -760,6 +897,11 @@
   window.addEventListener('focus', () => {
     if (state.phase === 'quiz' && !state.answered && !isModalOpen()) resumeTimer();
   });
+
+  // Re-apply the safe-zone preset when the phone rotates.
+  const orientQuery = window.matchMedia('(orientation: landscape)');
+  if (orientQuery.addEventListener) orientQuery.addEventListener('change', handleOrientation);
+  else if (orientQuery.addListener) orientQuery.addListener(handleOrientation);
 
   /* ---------------- boot ---------------- */
   loadStored();

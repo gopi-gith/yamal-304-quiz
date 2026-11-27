@@ -4,13 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#060812">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="YAMAL 304">
+<meta name="format-detection" content="telephone=no">
 <meta name="description" content="The Lamine Yamal 304 Quiz — 10 questions about the kid from Rocafonda. How well do you know him?">
 <meta property="og:title" content="YAMAL 304 — The Lamine Yamal Quiz">
 <meta property="og:description" content="10 questions. 60 seconds each. How well do you know the kid from Rocafonda?">
 <meta property="og:type" content="website">
 <title>YAMAL 304 — The Lamine Yamal Quiz</title>
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icon.svg">
+<link rel="apple-touch-icon" href="icon-180.png">
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -151,7 +156,7 @@
   .quiz-brand span{font-family:var(--num);color:var(--gold);font-size:13px;letter-spacing:.02em}
   .quiz-actions{display:flex;gap:6px;align-items:center}
   .quiz-shell{flex:1;display:flex;flex-direction:column;justify-content:center;width:min(760px,100%);margin:0 auto;padding:14px 0 30px;min-height:0}
-  .quiz-card{position:relative;padding:clamp(20px,3vw,32px);border-radius:18px;border:1px solid rgba(244,239,226,.15);
+  .quiz-card{position:relative;flex:none;padding:clamp(20px,3vw,32px);border-radius:18px;border:1px solid rgba(244,239,226,.15);
     background:linear-gradient(165deg,rgba(255,255,255,.065),rgba(8,11,22,.94) 30%,rgba(8,11,22,.97));
     box-shadow:0 30px 100px rgba(0,0,0,.55);overflow:hidden}
   .quiz-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:repeating-linear-gradient(90deg,var(--blau) 0 80px,var(--grana) 80px 160px)}
@@ -243,7 +248,8 @@
   .review-explain{font-size:6.5px;line-height:1.55;color:rgba(244,239,226,.42);margin-top:3px}
 
   /* ---------------- modals ---------------- */
-  .modal{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:20px;
+  .modal{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;
+    padding:calc(16px + var(--safe-t)) calc(16px + var(--safe-r)) calc(16px + var(--safe-b)) calc(16px + var(--safe-l));
     background:rgba(3,5,11,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);overflow-y:auto}
   .modal.hidden{display:none !important}
   .panel{position:relative;width:min(540px,100%);background:rgba(8,11,22,.97);border:1px solid rgba(244,239,226,.16);
@@ -271,6 +277,27 @@
   .share-note{font-size:7px;line-height:1.6;color:var(--muted);max-width:330px;margin-top:8px}
   .share-note b{color:var(--gold)}
   .confirm-sub{font-size:9px;line-height:1.6;color:var(--muted);margin-top:10px}
+
+  /* ---------------- safe zone ---------------- */
+  .safe-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:16px;text-align:left}
+  .safe-opt{position:relative;padding:11px 26px 11px 12px;border-radius:9px;border:1px solid rgba(244,239,226,.13);
+    background:rgba(255,255,255,.03);text-align:left;transition:.15s}
+  .safe-opt:hover{border-color:rgba(255,207,74,.4);background:rgba(255,207,74,.05)}
+  .safe-opt b{display:block;font-family:var(--num);font-size:12px;letter-spacing:.06em;color:var(--bone);text-transform:uppercase}
+  .safe-opt span{display:block;font-size:6.5px;line-height:1.5;color:var(--muted);margin-top:3px;letter-spacing:.03em}
+  .safe-opt::after{content:'';position:absolute;top:12px;right:11px;width:8px;height:8px;border-radius:50%;
+    border:1px solid rgba(244,239,226,.28);transition:.15s}
+  .safe-opt[aria-checked="true"]{border-color:rgba(255,207,74,.75);background:rgba(255,207,74,.09)}
+  .safe-opt[aria-checked="true"] b{color:var(--gold)}
+  .safe-opt[aria-checked="true"]::after{background:var(--gold);border-color:var(--gold);box-shadow:0 0 9px rgba(255,207,74,.75)}
+  .safe-opt[data-preset="none"]{grid-column:1/-1}
+  .safe-readout{display:flex;gap:5px;margin-top:12px}
+  .safe-readout span{flex:1;border:1px solid rgba(244,239,226,.09);border-radius:7px;background:rgba(255,255,255,.025);
+    padding:7px 3px 6px;font-size:5.5px;font-weight:700;letter-spacing:.12em;color:var(--muted);text-align:center}
+  .safe-readout b{display:block;font-family:var(--num);font-size:13px;font-weight:400;color:var(--bone);letter-spacing:.02em;margin-top:2px}
+  .safe-note{font-size:7px;line-height:1.65;color:var(--muted);margin-top:10px;text-align:left}
+  .safe-note b{color:var(--gold)}
+  .safe-orient{color:var(--gold)}
 
   /* toast */
   #toast{position:fixed;left:50%;bottom:calc(28px + var(--safe-b));transform:translateX(-50%) translateY(8px);z-index:40;
@@ -301,6 +328,7 @@
     .start-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
     .start-actions .btn-gold{grid-column:1/-1;width:100%}
     .start-actions .btn-ghost{justify-content:center;text-align:center}
+    #safeBtn{grid-column:1/-1}
     .btn-gold{font-size:16px;padding:11px 20px}
     .btn-ghost{font-size:6.5px;padding:10px 11px}
     .start-meta{gap:12px;margin-top:16px;font-size:6px}
@@ -340,22 +368,46 @@
     .panel{padding:22px 16px 20px}
     .how-row p{font-size:7px}
     .qr-box{width:min(210px,60vw)}
+    .safe-opt{padding:9px 24px 9px 10px}
+    .safe-opt b{font-size:11px}
+    .safe-opt span{font-size:6px}
   }
   @media (max-height:760px){
     .quiz-shell{justify-content:flex-start}
+    #start{align-items:flex-start}
   }
-  @media (max-height:540px) and (min-width:721px){
+  @media (max-height:540px) and (orientation:landscape){
+    #start{align-items:flex-start}
     .start-wrap{padding-top:2vh}
     .start-title .last{font-size:clamp(64px,10vw,112px)}
     .tagline{margin:12px 0 14px}
     .rules{margin-bottom:14px}
     .start-footer{bottom:8px}
-    .quiz-top{padding-bottom:8px}
-    .quiz-card{padding:18px 22px}
-    .question{font-size:24px;margin-bottom:10px}
-    .timer{margin-bottom:12px}
-    .option{padding:10px 12px;min-height:48px}
-    .feedback{margin-top:12px;padding-top:10px}
+    #quiz{padding-top:calc(4px + var(--safe-t))}
+    .quiz-top{padding:2px 0 4px}
+    .quiz-shell{padding:4px 0 8px}
+    .quiz-card{padding:12px 16px}
+    .quiz-meta{margin-bottom:6px}
+    .progress{margin-bottom:8px}
+    .question{font-size:clamp(17px,2.9vw,21px);margin-bottom:6px;min-height:0}
+    .timer{margin-bottom:8px}
+    .options{grid-template-columns:1fr 1fr;gap:6px}
+    .option{padding:7px 9px;min-height:38px;font-size:9.5px}
+    .feedback{margin-top:7px;padding-top:7px}
+    .fb-text{margin-bottom:8px;font-size:7.5px}
+    .next-btn{font-size:11px;padding:6px 12px}
+    .quiz-footer{margin-top:3px}
+    #safe .panel{padding:16px 20px 14px}
+    #safe .panel-sub{display:none}
+    #safe .panel-title{font-size:34px}
+    #safe .safe-grid{grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+    #safe .safe-opt{padding:8px 22px 8px 9px}
+    #safe .safe-opt[data-preset="none"]{grid-column:auto}
+    #safe .safe-opt b{font-size:11px}
+    #safe .safe-opt span{font-size:5.5px}
+    #safe .safe-readout{margin-top:8px}
+    #safe .safe-note{margin-top:6px}
+    #safe .panel-actions{margin-top:10px}
   }
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation-duration:.001ms !important;transition-duration:.001ms !important}
@@ -394,10 +446,11 @@
           <button id="startBtn" class="btn-gold"><span>START THE QUIZ</span><span>→</span></button>
           <button id="howBtn" class="btn-ghost">HOW TO PLAY</button>
           <a class="btn-ghost" href="answers.html" target="_blank" rel="noopener">ANSWER KEY</a>
+          <button id="safeBtn" class="btn-ghost safe-link">SAFE ZONE</button>
         </div>
         <div class="start-meta">
           <span>BEST <b id="bestStart">—</b></span>
-          <span>FAN-MADE · FACTS CHECKED NOV 2026</span>
+          <span>FAN-MADE · FACTS CHECKED 2027</span>
         </div>
       </div>
       <aside class="jersey-side" aria-hidden="true">
@@ -420,6 +473,11 @@
     <div class="quiz-top">
       <div class="quiz-brand">YAMAL <span>304</span></div>
       <div class="quiz-actions">
+        <button id="safeBtn2" class="icon-btn" aria-label="Safe zone settings" title="Safe zone">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/>
+          </svg>
+        </button>
         <button id="soundBtn2" class="icon-btn" aria-label="Toggle sound">♪</button>
         <button id="quitBtn" class="icon-btn" aria-label="Leave quiz">✕</button>
       </div>
@@ -485,8 +543,9 @@
       <div class="how-grid">
         <div class="how-row"><span class="how-key">PICK</span><p>Tap or click one of the four answers. You can also press <b>1 / 2 / 3 / 4</b>.</p></div>
         <div class="how-row"><span class="how-key">TIME</span><p>You have <b>60 seconds</b> per question. When the bar runs out, the answer is revealed and the question is lost.</p></div>
-        <div class="how-row"><span class="how-key">SCORE</span><p>One point per correct answer. Twelve questions per game. Your <b>best score</b> is saved on this device.</p></div>
+        <div class="how-row"><span class="how-key">SCORE</span><p>One point per correct answer. Ten questions per game. Your <b>best score</b> is saved on this device.</p></div>
         <div class="how-row"><span class="how-key">NEXT</span><p>After each answer, read the explanation and tap <b>NEXT QUESTION</b> or press <b>Enter</b>.</p></div>
+        <div class="how-row"><span class="how-key">FIT</span><p>On a phone, tap <b>SAFE ZONE</b> to match your notch, Dynamic Island or gesture bar. The choice is saved for next time.</p></div>
         <div class="how-row"><span class="how-key">CODE</span><p>No googling. No pausing the clock. Trust your knowledge of the kid from Rocafonda.</p></div>
       </div>
       <div class="panel-actions"><button id="howCloseBtn" class="btn-gold"><span>GOT IT</span><span>→</span></button></div>
@@ -503,6 +562,40 @@
         <button id="confirmLeaveBtn" class="btn-gold"><span>LEAVE</span><span>→</span></button>
         <button id="confirmStayBtn" class="btn-ghost">KEEP PLAYING</button>
       </div>
+    </div>
+  </div>
+
+  <!-- ================= SAFE ZONE ================= -->
+  <div id="safe" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="safeTitle">
+    <div class="panel">
+      <div class="panel-kicker">SCREEN FIT · <span class="safe-orient" id="safeOrientation">PORTRAIT</span></div>
+      <h2 class="panel-title" id="safeTitle">SAFE ZONE</h2>
+      <p class="panel-sub">Pick the preset that matches your phone. It keeps buttons and text clear of the notch, camera island and home bar — in portrait and landscape.</p>
+      <div class="safe-grid" id="safeGrid" role="radiogroup" aria-label="Safe zone preset">
+        <button type="button" class="safe-opt" data-preset="auto" role="radio" aria-checked="true">
+          <b>Auto</b><span>This phone's real safe area. Recommended.</span>
+        </button>
+        <button type="button" class="safe-opt" data-preset="island" role="radio" aria-checked="false">
+          <b>iPhone Island</b><span>Dynamic Island iPhones.</span>
+        </button>
+        <button type="button" class="safe-opt" data-preset="notch" role="radio" aria-checked="false">
+          <b>iPhone Notch</b><span>Notched iPhones (X–14).</span>
+        </button>
+        <button type="button" class="safe-opt" data-preset="android" role="radio" aria-checked="false">
+          <b>Android</b><span>Status and gesture bars.</span>
+        </button>
+        <button type="button" class="safe-opt" data-preset="none" role="radio" aria-checked="false">
+          <b>None</b><span>Edge to edge. No extra inset.</span>
+        </button>
+      </div>
+      <div class="safe-readout" id="safeReadout" aria-live="polite">
+        <span>TOP<b id="safeTop">0</b></span>
+        <span>BOTTOM<b id="safeBottom">0</b></span>
+        <span>LEFT<b id="safeLeft">0</b></span>
+        <span>RIGHT<b id="safeRight">0</b></span>
+      </div>
+      <p class="safe-note" id="safeNote">Applied instantly and saved on this device. Values are in pixels.</p>
+      <div class="panel-actions"><button id="safeCloseBtn" class="btn-gold"><span>DONE</span><span>→</span></button></div>
     </div>
   </div>
 

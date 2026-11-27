@@ -1,7 +1,7 @@
 /* YAMAL 304 — question bank
    Levels: 1 = easy, 2 = medium, 3 = tough.
    The game draws 4 easy + 4 medium + 2 tough = 10 questions each round.
-   Facts checked November 2026.
+   Facts checked 2027.
 */
 window.YAMAL_QUESTIONS = [
   /* ---------------- EASY (8) ---------------- */
@@ -56,7 +56,7 @@ window.YAMAL_QUESTIONS = [
   },
   {
     level: 1, cat: 'AGE',
-    q: 'How old is Lamine Yamal as of November 2026?',
+    q: 'How old did Lamine Yamal turn on 13 July 2026?',
     options: ['17', '18', '19', '20'],
     answer: 2,
     explain: 'He was born on 13 July 2007, so he turned 19 in July 2026.'
